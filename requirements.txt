@@ -1,0 +1,8 @@
+selenium
+undetected-chromedriver
+beautifulsoup4
+pyfiglet
+colorama
+coloredlogs
+requests
+browser-cookie3
