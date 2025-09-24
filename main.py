@@ -56,6 +56,7 @@ log_format_file = logging.Formatter('[%(asctime)s] [%(levelname)s] [%(funcName)s
 file_handler.setFormatter(log_format_file)
 logger.addHandler(file_handler)
 
+
 # --- FUNCIONES AUXILIARES ---
 
 def banner():
@@ -67,6 +68,7 @@ def banner():
     print(Back.GREEN + "Created by alphaDRM")
     print()
 
+
 def sanitize_filename(name: str) -> str:
     """Limpia una cadena para que sea un nombre de archivo/carpeta válido."""
     # Elimina caracteres no permitidos en nombres de archivo/carpeta
@@ -75,9 +77,11 @@ def sanitize_filename(name: str) -> str:
     cleaned_name = cleaned_name.strip()
     return cleaned_name
 
+
 def clean_lesson_name(name: str) -> str:
     """Elimina la duración del video (ej. (12:34)) del nombre de la lección."""
     return re.sub(r'\s*\(\d{1,2}:\d{2}\)\s*', '', name).strip()
+
 
 # --- FUNCIONES DE SCRAPING Y EXTRACCIÓN ---
 
@@ -153,6 +157,7 @@ def scrape_course_structure(course_url: str, browser: str, base_url: str) -> Opt
         logger.error(f"Error inesperado durante el scraping: {e}")
         return None
 
+
 # --- FUNCIONES DE DESCARGA ---
 
 def download_cover_image(driver: uc.Chrome, save_dir: str):
@@ -174,6 +179,7 @@ def download_cover_image(driver: uc.Chrome, save_dir: str):
         logger.info('Imagen de portada descargada exitosamente.')
     except (TimeoutException, requests.RequestException) as e:
         logger.warning(f"No se pudo descargar la imagen de portada: {e}")
+
 
 def download_lesson_resources(driver: uc.Chrome, save_path: str):
     """Descarga archivos adjuntos y guarda enlaces de una lección."""
@@ -204,6 +210,7 @@ def download_lesson_resources(driver: uc.Chrome, save_path: str):
             with open(links_path, 'w', encoding='utf-8') as f:
                 f.write('\n'.join(links))
             logger.info("Enlaces adicionales guardados en 'enlaces_adicionales.txt'.")
+
 
 def download_lesson_video(driver: uc.Chrome, save_path: str, lesson_filename: str):
     """Encuentra y descarga el video de la lección usando yt-dlp."""
@@ -254,6 +261,7 @@ def download_lesson_video(driver: uc.Chrome, save_path: str, lesson_filename: st
         logger.error(f"Error al procesar los datos del video: {e}")
     finally:
         driver.switch_to.default_content()
+
 
 # --- FUNCIÓN PRINCIPAL DE PROCESAMIENTO ---
 
@@ -329,7 +337,8 @@ def process_course(course_url: str, course_data: Dict[str, Any]):
         logger.info(f"Descarga Finalizada. Duración total: {time.strftime('%H:%M:%S', time.gmtime(elapsed_time))}")
         logger.info("*** Created by alphaDRM ***")
 
-# --- INICIO DEL SCRIPT ---
+
+# --- INICIO DEL PROCESO ---
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="A2 Downloader",
@@ -341,8 +350,8 @@ if __name__ == "__main__":
     )
     # Argumento opcional para el navegador
     parser.add_argument(
-        "--browser",
-        help="Navegador para extraer las cookies. Por defecto: firefox.",
+        "-b", "--browser",
+        help="Navegador para extraer las cookies.",
         choices=["firefox", "chrome", "edge", "brave"],
         default="firefox",
     )
