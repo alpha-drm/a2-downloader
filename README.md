@@ -13,7 +13,6 @@ Herramienta `CLI` que permite a usuarios con suscripción descargar cursos para 
 ![GitHub Created At](https://img.shields.io/github/created-at/alpha-drm/a2-downloader)
 ![GitHub last commit](https://img.shields.io/github/last-commit/alpha-drm/a2-downloader)
 
-
 </div>
 
 > [!NOTE]
@@ -23,7 +22,7 @@ Herramienta `CLI` que permite a usuarios con suscripción descargar cursos para 
 
 - No evade sistemas de protección ni accede a contenido sin autorización.
 - Requiere autenticación válida del usuario.
-- Funciona desde la línea de comandos (CLI).
+- Funciona desde la línea de comandos `CLI`.
 - Automatiza la navegación web mediante Chrome.
 - Descarga videos y otros recursos disponibles.
 - Permite reanudar descargas interrumpidas.
@@ -42,6 +41,8 @@ Herramienta `CLI` que permite a usuarios con suscripción descargar cursos para 
 
 ## Instalación
 
+### Windows
+
 - Crear una carpeta llamada `tools` o el nombre que quieran en en el disco `C:\`, dentro copiar los ejecutables (yt-dlp, ffmpeg, aria2c) y por último agregar la ruta de la carpeta al `PATH` del sistema.
 
 - Opcional: copiar los ejecutables directamente en el directorio raíz del proyecto.
@@ -55,12 +56,12 @@ C:\tools
    └── aria2c.exe
 ```
 
-### Windows
+#### Clonar el proyecto
 
-Clonar el proyecto usando GIT, o simplemente descargar el archivo `ZIP` del repositorio
+Desde una terminal clonar el proyecto con `GIT`, o simplemente descarga el archivo `ZIP` del repositorio.
 
 ```bash
-git clone https://github.com/alpha-drm/a2-downloader
+git clone https://github.com/alpha-drm/a2-downloader.git
 
 ```
 
@@ -71,12 +72,12 @@ cd a2-downloader
 ```
 
 #### Entorno virtual
-  Es recomendable crear un entorno virtual para instalar los `requirements.txt` del proyecto
+Es recomendable crear un entorno virtual para instalar los `requirements.txt` del proyecto
 ```bash
 python -m venv env
 ```
 
-  Activar el entorno virtual
+Activar el entorno virtual
 ```bash
 env\Scripts\activate
 ```
@@ -87,14 +88,16 @@ env\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Cookies
+### Cookies
 
 > [!IMPORTANT]
 > Estar logueado en la plataforma, usar `firefox` preferiblemente.
 
-El script utiliza cookies para autenticación y lo extrae automáticamente. Opcional, puedes especificar de que navegador extraer las cookies con el argumento `--browser`. Las opciones son:
+El script utiliza cookies para autenticación y lo extrae automáticamente. Opcional: especificar de que navegador extraer las cookies con el argumento `-b` o `--browser`.
 
-- `firefox` por defecto, recomendado.
+Opciones:
+
+- `firefox` Default, recomendado.
 - `chrome`
 - `edge`
 - `brave`
@@ -105,7 +108,8 @@ El script utiliza cookies para autenticación y lo extrae automáticamente. Opci
 python main.py <url> [OPCIONES]
 ```
 Opciones:
-- `--browser` Navegador de donde extraer las cookies {firefox, chrome, edge, brave}
+- `-b`, `--browser` Navegador de donde extraer las cookies. Default: firefox
+- `-h`, `--help` Ayuda
 
 Ejemplos:
 
@@ -120,8 +124,7 @@ python main.py https://cursos.a2capacitacion.com/courses/105117/lectures/5005015
 ```
 
 > [!WARNING]
-> Al finalizar la descarga de un curso es posible que los procesos de chrome no se hayan cerrado correctamente, es un error con el 
-undetected-chromedriver que no he podido resolver,  revisar el administrador de tareas y finalizarlos para no consumir recursos.
+> Al finalizar la descarga de un curso es posible que los procesos de chrome no se hayan cerrado correctamente, es un error con el undetected-chromedriver que no he podido resolver, revisar el administrador de tareas y finalizarlos para no consumir recursos.
 
 ## Feedback
 
@@ -129,7 +132,7 @@ Para comentarios o reportes de errores utilizar [GitHub Issues](https://github.c
 
 ## License
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](https://github.com/alpha-drm/a2-downloader/blob/main/LICENSE) para más detalles.
+Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
 ## Aviso Legal
 
