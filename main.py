@@ -8,25 +8,26 @@ Este script se proporciona exclusivamente con fines educativos.
 El autor no se hace responsable del uso indebido del mismo.
 """
 
-import undetected_chromedriver as uc
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, WebDriverException
-import requests
-import json
-import os
-import browser_cookie3
-import time
-import logging
-import coloredlogs
-from colorama import Fore, Back, init
-from bs4 import BeautifulSoup
-from pyfiglet import Figlet
-import subprocess
 import argparse
+import json
+import logging
+import os
 import re
-from typing import Dict, Any, Optional
+import subprocess
+import time
+from typing import Any, Dict, Optional
+
+import browser_cookie3
+import coloredlogs
+import requests
+import undetected_chromedriver as uc
+from bs4 import BeautifulSoup
+from colorama import Back, Fore, init
+from pyfiglet import Figlet
+from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 # --- CONFIGURACIÓN DE LOGGING ---
 LOG_LEVEL = logging.INFO
@@ -183,13 +184,13 @@ def download_cover_image(driver: uc.Chrome, save_dir: str):
 
 def download_lesson_resources(driver: uc.Chrome, save_path: str):
     """Descarga archivos adjuntos y guarda enlaces de una lección."""
-    soup = BeautifulSoup(driver.page_source, 'html.parser')  
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
     # Descargar archivos adjuntos
     for link in soup.find_all('a', class_='download'):
         url = link['href']
         filename = sanitize_filename(link.get('data-x-origin-download-name', link.text.strip()))
         file_path = os.path.join(save_path, filename)
-        
+
         try:
             response = requests.get(url)
             response.raise_for_status()
@@ -223,7 +224,7 @@ def download_lesson_video(driver: uc.Chrome, save_path: str, lesson_filename: st
         script_tag = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "__NEXT_DATA__"))
         )
-        
+
         json_data = json.loads(script_tag.get_attribute('innerHTML'))
         media_assets = json_data.get('props', {}).get('pageProps', {}).get('applicationData', {}).get('mediaAssets', [])
 
@@ -235,7 +236,7 @@ def download_lesson_video(driver: uc.Chrome, save_path: str, lesson_filename: st
         video_url = next((asset['url'] for asset in media_assets if asset.get('qualityLabel') == "auto"), None)
         if not video_url: # Si no hay 'auto', toma la primera URL que encuentre
              video_url = media_assets[0].get('url') if media_assets else None
-        
+
         if video_url:
             logger.info(f"Descargando video: {lesson_filename}")
             command = [
@@ -269,7 +270,7 @@ def process_course(course_url: str, course_data: Dict[str, Any]):
     """Proceso de descarga del curso."""
     driver = None
     start_time = time.time()
-    
+
     try:
         logger.info("Iniciando el navegador...")
         driver = uc.Chrome()
@@ -290,7 +291,7 @@ def process_course(course_url: str, course_data: Dict[str, Any]):
 
         base_dir = course_data['course_title']
         os.makedirs(base_dir, exist_ok=True)
-        
+
         download_cover_image(driver, base_dir)
 
         total_lessons = sum(len(sec["lecciones"]) for sec in course_data["secciones"])
@@ -301,16 +302,16 @@ def process_course(course_url: str, course_data: Dict[str, Any]):
             section_path = os.path.join(base_dir, section_title)
             os.makedirs(section_path, exist_ok=True)
             logger.info(f"--- Procesando sección: {section_title} ---")
-            
+
             for i, lesson in enumerate(section["lecciones"]):
                 lesson_count += 1
                 lesson_title = f"{i+1:02d} - {lesson['name']}"
                 lesson_filename = sanitize_filename(lesson_title)
                 lesson_url = lesson["url"]
-                
+
                 logger.info(f"Procesando lección {lesson_count}/{total_lessons}: {lesson['name']}")
                 driver.get(lesson_url)
-                
+
                 try:
                     # Espera a que el contenido principal de la lección cargue
                     WebDriverWait(driver, 20).until(
@@ -319,7 +320,7 @@ def process_course(course_url: str, course_data: Dict[str, Any]):
                 except TimeoutException:
                     logger.error(f"La página de la lección '{lesson_title}' no cargó correctamente. Saltando...")
                     continue
-                
+
                 download_lesson_resources(driver, section_path)
                 download_lesson_video(driver, section_path, lesson_filename)
 
@@ -331,7 +332,7 @@ def process_course(course_url: str, course_data: Dict[str, Any]):
         if driver:
             driver.quit()
             logger.info("El navegador se ha cerrado.")
-        
+
         end_time = time.time()
         elapsed_time = end_time - start_time
         logger.info(f"Descarga Finalizada. Duración total: {time.strftime('%H:%M:%S', time.gmtime(elapsed_time))}")
